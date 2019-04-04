@@ -9,12 +9,17 @@ import java.util.Iterator;
 public class implSet<E> implements Set<E> {
 
     private ArrayList<E>[] buckets;
-    public final int size = 128;
+
+    //The book says to use this number (along with some other) as the bucket size.
+    //We always use a large prime number
+    public final int size = 41;
 
 
     public implSet(int _max)
     {
         ArrayList<E> temp = new ArrayList<>();
+
+        //Only way i was able to make the bucket equal to a new instance of arraylist
         buckets = (ArrayList<E>[]) Array.newInstance(temp.getClass(), size);
 
         for(int i = 0; i < size; i++)
@@ -25,7 +30,7 @@ public class implSet<E> implements Set<E> {
 
     public int hash(E e)
     {
-        // Take the parameter to hash and divide by size of set.
+        // Take the parameter to hash and mod by size to fit it in a bucket
         int hash = e.hashCode() % size;
 
         //If the hash has no space add another 128 before returning
@@ -37,6 +42,7 @@ public class implSet<E> implements Set<E> {
         // Return the hash
         return hash;
     }
+
     /**
      * Add element e to the set, unless e already exists in the set or e is null.
      *
@@ -68,7 +74,7 @@ public class implSet<E> implements Set<E> {
 
         if(e == null)
         {
-
+            //Do nothing
         }
         else
         {
