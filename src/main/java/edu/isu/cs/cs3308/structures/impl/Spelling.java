@@ -11,10 +11,13 @@ import java.util.List;
 
 public class Spelling implements SpellChecker {
 
-    private List<String> suggestList = new ArrayList<>();
+    private List<String> stringList = new ArrayList<>();
     private HashSet<String> lexicon = new HashSet<>();
+
+    //Puts alphabet into char array
     private char[] changes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'".toCharArray();
 
+    //saveLexican checks lower case for funciton
     public Spelling() {
         saveLexcion(false);
     }
@@ -29,21 +32,22 @@ public class Spelling implements SpellChecker {
      */
     @Override
     public List<String> check(String s) {
-        suggestList.clear();
-        suggestList.add(s);
+        stringList.clear();
+        stringList.add(s);
 
-        if (lexicon.contains(s)) return suggestList;
+        if (lexicon.contains(s)) return stringList;
 
         processWord(s);
-        if (suggestList.size() == 1) {
-            suggestList = new ArrayList<>();
+        if (stringList.size() == 1)
+        {
+            stringList = new ArrayList<>();
             saveLexcion(true);
             processWord(s);
         }
         removeDuplicates();
 
-        if (suggestList.size() == 1) suggestList.add("No suggestions");
-        return suggestList;
+        if (stringList.size() == 1) stringList.add("No suggestions");
+        return stringList;
     }
 
     /**
@@ -52,16 +56,19 @@ public class Spelling implements SpellChecker {
      */
     private void saveLexcion(boolean asLower) {
         try {
-            FileReader file = new FileReader("data/en-US.dic");
-            BufferedReader buffer = new BufferedReader(file);
-            for (String line; (line = buffer.readLine()) != null; ) {
-                if (asLower) {
+            FileReader fileRead = new FileReader("data/en-US.dic");
+            BufferedReader buffer = new BufferedReader(fileRead);
+            for (String line; (line = buffer.readLine()) != null; )
+            {
+                if (asLower)
+                {
                     line = line.toLowerCase();
                 }
                 lexicon.add(line);
             }
             buffer.close();
-        } catch (Exception ex) {
+        } catch (Exception ex)
+        {
             System.out.println(ex);
         }
     }
@@ -70,10 +77,10 @@ public class Spelling implements SpellChecker {
      * Remove duplicate suggestions from the processing list
      */
     private void removeDuplicates() {
-        for (int i = 0; i < suggestList.size(); i++) {
-            for (int c = i+1; c < suggestList.size(); c++) {
-                if (suggestList.get(i).equals(suggestList.get(c))) {
-                    suggestList.remove(c);
+        for (int i = 0; i < stringList.size(); i++) {
+            for (int c = i+1; c < stringList.size(); c++) {
+                if (stringList.get(i).equals(stringList.get(c))) {
+                    stringList.remove(c);
                 }
             }
         }
@@ -114,7 +121,7 @@ public class Spelling implements SpellChecker {
                 }
 
                 if (lexicon.contains(verify.toString())) {
-                    suggestList.add(verify.toString());
+                    stringList.add(verify.toString());
                 }
             }
         }
